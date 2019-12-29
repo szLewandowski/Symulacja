@@ -1,7 +1,10 @@
 #pragma once
-#include "Restaurant.h"
-class Tables :
-	public Restaurant
+
+class Tables
 {
+public:
+	Tables();
+	~Tables();
+	
 };
 
