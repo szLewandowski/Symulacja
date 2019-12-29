@@ -1,7 +1,9 @@
 #pragma once
-#include "Restaurant.h"
-class Buffet :
-	public Restaurant
+
+class Buffet
 {
+public:
+	Buffet();
+	~Buffet();
 };
 
