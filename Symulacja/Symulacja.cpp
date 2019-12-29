@@ -1,10 +1,18 @@
 #include <iostream>
-
+#include "process.h"
 using namespace std;
 
 int main()
 {
-    cout << "Hello World!\n";
-	cout << "Hello World!\n";
+	Process* current;
+	auto clock = 0.0;
+
+
+	while(clock < 100000)
+	{
+		// pêtla g³ówna symulacji
+		
+	}
+	
 	return 0;
 }

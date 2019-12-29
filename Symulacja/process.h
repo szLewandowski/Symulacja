@@ -5,7 +5,7 @@ class Process
 {
 public:
 	Process();
-	virtual ~Process() = 0;
+	~Process();
 	void virtual execute() = 0;
 	double time();
 	void activate(double);
