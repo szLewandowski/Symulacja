@@ -1,9 +1,12 @@
 #pragma once
+#include <queue>
 #include "Tables.h"
 #include "Manager.h"
 #include "Waiters.h"
 #include "Buffet.h"
 #include "Cash.h"
+#include "process.h"
+#include "Customer.h"
 class Restaurant
 {
 public:
@@ -14,5 +17,9 @@ public:
 	Waiters* waiters_;
 	Buffet* buffet_;
 	Cash* cash_;
+	
+	queue<Process*> buffet_queue_;
+	queue<Process*> tables_queue_;
+	queue<Process*> cash_queue_;
 };
 
