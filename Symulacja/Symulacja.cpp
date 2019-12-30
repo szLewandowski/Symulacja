@@ -7,6 +7,7 @@ using namespace std;
 
 int main()
 {
+	const bool step_mode = true;
 	Restaurant restaurant;
 	Process* current;
 	auto clock = 0.0;
