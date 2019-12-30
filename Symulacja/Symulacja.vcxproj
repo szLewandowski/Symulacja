@@ -148,11 +148,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="event.cpp" />
+<<<<<<< Updated upstream
+=======
+    <ClCompile Include="Event_list.cpp" />
+    <ClCompile Include="Manager.cpp" />
+>>>>>>> Stashed changes
     <ClCompile Include="process.cpp" />
     <ClCompile Include="Symulacja.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="event.h" />
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="Event_list.h" />
+    <ClInclude Include="Manager.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="process.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
