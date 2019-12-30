@@ -21,5 +21,12 @@ public:
 	queue<Process*> buffet_queue_;
 	queue<Process*> tables_queue_;
 	queue<Process*> cash_queue_;
+
+	//double Uniform();
+	//double NormalDistributionGenerator(int average, int variance);
+	//double ExponentialDistributionGenerator(int average);
+	
+private:
+	int seed_ = 5;
 };
 

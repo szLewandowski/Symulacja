@@ -151,6 +151,7 @@
     <ClCompile Include="Cash.cpp" />
     <ClCompile Include="Customer.cpp" />
     <ClCompile Include="event.cpp" />
+    <ClCompile Include="Event_list.cpp" />
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="process.cpp" />
     <ClCompile Include="Restaurant.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Cash.h" />
     <ClInclude Include="Customer.h" />
     <ClInclude Include="event.h" />
+    <ClInclude Include="Event_list.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="process.h" />
     <ClInclude Include="Restaurant.h" />
