@@ -1,5 +1,4 @@
-#ifndef SIMULATION_RESOURCES_QUEUE_TIME_EVENT_H_
-#define SIMULATION_RESOURCES_QUEUE_TIME_EVENT_H_
+#pragma once
 
 #include <queue>
 #include "event.h"
@@ -22,4 +21,4 @@ private:
   Event* last_ = nullptr;
   int id_ = 0;
 };
-#endif //QUEUE_TIME_EVENT_H
+
