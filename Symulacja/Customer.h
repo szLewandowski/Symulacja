@@ -1,11 +1,12 @@
 #pragma once
 #include "process.h"
+#include "Event_list.h"
 using namespace std;
 class Customer :
 	public Process
 {
 public:
-	void execute() override;
-	
+	explicit Customer(Event_list*);
+	void execute() override;	
 };
 

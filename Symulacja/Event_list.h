@@ -14,6 +14,7 @@ public:
     //void DeleteEvent(int id);
     void AlarmDecimation();
     double FirstEventTime();
+    void TestingFunction();
 private:
     Event* first_ = nullptr;
     Event* last_ = nullptr;

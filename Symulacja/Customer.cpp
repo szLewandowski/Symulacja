@@ -1,6 +1,11 @@
 #include "Customer.h"
 #include <iostream>
 
+Customer::Customer(Event_list* list): Process(list)
+{
+	//cerr << "Customer constructor\n";
+}
+
 void Customer::execute()
 {
 	auto active = true;
@@ -41,6 +46,6 @@ void Customer::execute()
 		case 10:
 			cerr << "Koniec obslugi w bufecie";
 			break;			
-		}		
+		}
 	}
 }

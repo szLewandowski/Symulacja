@@ -167,12 +167,40 @@ void Event_list::AlarmDecimation()
 
 double Event_list::FirstEventTime()
 {
-    return first_->event_time_;
+	if(first_!=nullptr)
+		return first_->event_time_;
+    return -1;
+}
+
+void Event_list::TestingFunction()
+{
+    cout << "Event_list: Testing function:\n";
+	if(first_==nullptr || first_==last_)
+	{
+        cout << "Nothing to test :(\n";
+	}
+    else
+    {
+        Event* temp = first_;
+        while (temp!=nullptr)       //a bit risky, consider (temp!=last_) with extra cout
+        {
+            cout << temp->event_time_ << "  ";
+            temp = temp->next_;
+        }
+    }
+    cin.get();
 }
 
 Event* Event_list::RemoveFirst()
 {
-    Event* first_event_from_list = first_;
-    first_ = first_->next_;
-    return first_event_from_list;
+    if (first_ != nullptr) {
+        Event* first_event_from_list = first_;
+        first_ = first_->next_;
+        first_event_from_list->next_ = nullptr;
+        first_event_from_list->prev_ = nullptr;
+        return first_event_from_list;
+    }
+    cerr << "ERROR Event_list: There is no event to remove!\n";
+    cin.get();
+    return nullptr;
 }
