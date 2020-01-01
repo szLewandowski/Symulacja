@@ -1,6 +1,7 @@
 #pragma once
-#include "event.h"
 #include "Event_list.h"
+#include <iostream>
+
 class Process
 {
 public:
@@ -11,6 +12,7 @@ public:
 	void activate(double);
 	int phase_;
 	bool terminated_;
+	const int group_size_ = (rand() % 4) + 1;
 	Event_list* event_list_;
 private:
 	Event* my_event_;
