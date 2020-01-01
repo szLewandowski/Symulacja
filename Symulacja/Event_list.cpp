@@ -1,8 +1,6 @@
 #include "Event_list.h"
-#include <ostream>
 #include <iostream>
-#include "event.h"
-#include "process.h"
+#include "process.h"    //used for avoid warnings
 using namespace std;
 
 void Event_list::AddNewEvent(Event* add_event)

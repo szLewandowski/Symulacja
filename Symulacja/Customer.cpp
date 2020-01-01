@@ -1,8 +1,10 @@
 #include "Customer.h"
 #include <iostream>
+#include <random>
 
-Customer::Customer(Event_list* list): Process(list)
+Customer::Customer(Event_list* list,Restaurant* restaurant): Process(list)
 {
+	restaurant_ = restaurant;
 	//cerr << "Customer constructor\n";
 }
 
@@ -14,7 +16,22 @@ void Customer::execute()
 		switch(phase_)
 		{
 		case 0:
-			cerr << "Pojawienie sie nowej grupy klientow";
+		{
+			cerr << "--> Pojawienie sie nowej grupy klientow";
+			Process* process = new Customer(event_list_,restaurant_);
+			process->activate(time() + NormalDistributionGenerator(make_pair(1900, 200)));
+			if (rand() % 2 == 0)
+			{
+				//buffet group
+				
+			}
+			else
+			{
+				//restaurant group
+				
+			}
+			
+		}
 			break;
 		case 1:
 			cerr << "Poczatek obslugi przez managera";
@@ -48,4 +65,18 @@ void Customer::execute()
 			break;			
 		}
 	}
+}
+
+double Customer::NormalDistributionGenerator(const pair<const int, const int> p)
+{
+	static default_random_engine generator;
+	normal_distribution<double> distribution(p.first, p.second);
+	return distribution(generator);
+}
+
+double Customer::ExponentialDistributionGenerator(const int average)
+{
+	static default_random_engine generator;
+	const exponential_distribution<double> distribution(average);
+	return 1 / distribution(generator);
 }

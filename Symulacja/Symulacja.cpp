@@ -1,5 +1,4 @@
 #include <iostream>
-#include "process.h"
 #include "Restaurant.h"
 #include <random>
 #include "Event_list.h"
@@ -20,10 +19,10 @@ double ExponentialDistributionGenerator(const int average) {
 int main()
 {
 	const bool step_mode = true;
-	Restaurant restaurant;
+	Restaurant* restaurant = new Restaurant;
 	const auto event_list = new Event_list;
 	auto clock = 0.0;
-	Process* current_process = new Customer(event_list);
+	Process* current_process = new Customer(event_list,restaurant);
 	current_process->activate(0);
 	current_process = nullptr;
 	while (clock<10000)

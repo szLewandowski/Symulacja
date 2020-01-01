@@ -1,6 +1,4 @@
 #include "process.h"
-#include "Event_list.h"
-#include <iostream>
 
 Process::Process(Event_list* list): phase_(0), terminated_(false),event_list_(list)
 {
