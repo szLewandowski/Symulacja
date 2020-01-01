@@ -15,9 +15,9 @@ public:
 	Buffet* buffet_;
 	Cash* cash_;
 	
-	queue<Process*> buffet_queue_;
-	queue<Process*> tables_queue_;
-	queue<Process*> cash_queue_;
+	//queue<Process*> buffet_queue_;
+	//queue<Process*> tables_queue_;
+	//queue<Process*> cash_queue_;
 
 	void hello()
 	{

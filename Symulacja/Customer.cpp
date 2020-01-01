@@ -20,14 +20,24 @@ void Customer::execute()
 			cerr << "--> Pojawienie sie nowej grupy klientow";
 			Process* process = new Customer(event_list_,restaurant_);
 			process->activate(time() + NormalDistributionGenerator(make_pair(1900, 200)));
+			process = nullptr;
 			if (rand() % 2 == 0)
 			{
 				//buffet group
-				
+				restaurant_->buffet_->AddToQueue(this);
+				if(restaurant_->buffet_->QueueEmpty() && restaurant_->buffet_->FreeSeats(this->group_size_))
+				{
+					phase_ = 9;
+				}
+				else
+				{
+					active = false;
+				}
 			}
 			else
 			{
 				//restaurant group
+				restaurant_->tables_->AddToQueue(this);
 				
 			}
 			
