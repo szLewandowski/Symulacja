@@ -19,7 +19,7 @@ bool Cash::free()
 	return false;
 }
 
-void Cash::add_customer(Process* customer)
+void Cash::AddCustomerToCash(Process* customer)
 {
 	for(int i=0;i<4;++i)
 	{
@@ -31,7 +31,12 @@ void Cash::add_customer(Process* customer)
 	}
 }
 
-void Cash::remove_customer(const double clock)
+void Cash::AddCustomerToQueue(Process* customer)
+{
+	queue_.push(customer);
+}
+
+void Cash::RemoveCustomer(const double clock)
 {
 	for(int i=0;i<4;++i)
 	{

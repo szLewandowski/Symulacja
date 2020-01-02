@@ -8,10 +8,12 @@ public:
 	Cash();
 	~Cash();
 	bool free();
-	void add_customer(Process*);
-	void remove_customer(double);
+	void AddCustomerToCash(Process*);
+	void AddCustomerToQueue(Process*);
+	void RemoveCustomer(double);
 private:
 	int size();
 	Process* cash_desks_[4];
+	queue<Process*> queue_;
 };
 

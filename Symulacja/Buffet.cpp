@@ -1,5 +1,6 @@
 #include "Buffet.h"
 #include <iostream>
+#include <algorithm>
 
 Buffet::Buffet()
 {
@@ -9,6 +10,11 @@ Buffet::Buffet()
 Buffet::~Buffet()
 {
 	std::cerr << "Delete Buffet\n";
+}
+
+bool Buffet::AreSame(const double a, const double b) const
+{
+	return fabs(a - b) < DBL_EPSILON;
 }
 
 bool Buffet::FreeSeats(const int need)
@@ -29,4 +35,23 @@ bool Buffet::QueueEmpty()
 void Buffet::AddToQueue(Process* customer)
 {
 	queue_.push(customer);
+}
+
+void Buffet::AddToBuffet()
+{
+	seats_.push_back(queue_.front());
+	queue_.pop();
+}
+
+void Buffet::WakeUpIfPossible()
+{
+	cin.get();
+}
+
+Process* Buffet::ReturnCustomer(double time)
+{
+	const auto it = find_if(seats_.begin(), seats_.end(), [&](Process* pr) {return  AreSame(time,pr->time()); });
+	//Process* temp = *it;
+	seats_.erase(it);
+	return *it;
 }

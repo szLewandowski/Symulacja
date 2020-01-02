@@ -16,32 +16,32 @@ void Customer::execute()
 		switch(phase_)
 		{
 		case 0:
-		{
-			cerr << "--> Pojawienie sie nowej grupy klientow";
-			Process* process = new Customer(event_list_,restaurant_);
-			process->activate(time() + NormalDistributionGenerator(make_pair(1900, 200)));
-			process = nullptr;
-			if (rand() % 2 == 0)
 			{
-				//buffet group
-				restaurant_->buffet_->AddToQueue(this);
-				if(restaurant_->buffet_->QueueEmpty() && restaurant_->buffet_->FreeSeats(this->group_size_))
+				cerr << "--> Pojawienie sie nowej grupy klientow";
+				Process* process = new Customer(event_list_,restaurant_);
+				process->activate(time() + NormalDistributionGenerator(make_pair(1900, 200)));
+				process = nullptr;
+				if (rand() % 2 == 0)
 				{
-					phase_ = 9;
+					//buffet group
+					restaurant_->buffet_->AddToQueue(this);
+					if(restaurant_->buffet_->QueueEmpty() && restaurant_->buffet_->FreeSeats(this->group_size_))
+					{
+						phase_ = 9;
+					}
+					else
+					{
+						active = false;
+					}
 				}
 				else
 				{
-					active = false;
+					//restaurant group
+					restaurant_->tables_->AddToQueue(this);
+					
 				}
-			}
-			else
-			{
-				//restaurant group
-				restaurant_->tables_->AddToQueue(this);
 				
 			}
-			
-		}
 			break;
 		case 1:
 			cerr << "Poczatek obslugi przez managera";
@@ -68,10 +68,22 @@ void Customer::execute()
 			cerr << "Koniec obslugi przy kasie";
 			break;
 		case 9:
-			cerr << "Poczatek obslugi w bufecie";
+			{
+				cerr << "--> Poczatek obslugi w bufecie";
+				restaurant_->buffet_->AddToBuffet();
+				this->activate(time() + NormalDistributionGenerator(make_pair(3200, 100)));
+				phase_ = 10;
+				active = false;
+			}
 			break;
 		case 10:
-			cerr << "Koniec obslugi w bufecie";
+			{
+				cerr << "--> Koniec obslugi w bufecie";
+				restaurant_->cash_->AddCustomerToQueue(restaurant_->buffet_->ReturnCustomer(this->time()));
+				restaurant_->buffet_->WakeUpIfPossible();
+
+				
+			}
 			break;			
 		}
 	}
