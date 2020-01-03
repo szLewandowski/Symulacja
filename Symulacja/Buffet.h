@@ -8,7 +8,7 @@ public:
 	Buffet();
 	~Buffet();
 	bool AreSame(double, double) const;
-	bool FreeSeats(int);
+	bool EnoughFreeSeats();
 	bool QueueEmpty();
 	void AddToQueue(Process*);
 	void AddToBuffet();

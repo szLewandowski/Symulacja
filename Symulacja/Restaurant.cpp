@@ -24,9 +24,6 @@ Restaurant::~Restaurant()
 	cash_ = nullptr;
 }
 
-
-
-
 /*
  *
 //Generatory:

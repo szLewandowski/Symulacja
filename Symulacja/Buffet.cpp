@@ -17,14 +17,24 @@ bool Buffet::AreSame(const double a, const double b) const
 	return fabs(a - b) < DBL_EPSILON;
 }
 
-bool Buffet::FreeSeats(const int need)
+bool Buffet::EnoughFreeSeats()
 {
 	int customers = 0;
 	for (auto seat : seats_)
 	{
 		customers += seat->group_size_;
 	}
-	return (number_of_seats_-customers)>=need;
+	if(queue_.empty()==false)
+	{
+		if (queue_.front()->group_size_ <= number_of_seats_ - customers)
+		{
+			return true;
+		}
+		return false;
+	}
+	cerr << "ERROR Buffet.cpp: There is no process in queue\n";
+	cin.get();
+	return false;
 }
 
 bool Buffet::QueueEmpty()
@@ -45,7 +55,10 @@ void Buffet::AddToBuffet()
 
 void Buffet::WakeUpIfPossible()
 {
-	cin.get();
+	if (EnoughFreeSeats())
+	{
+		queue_.front()->execute();
+	}
 }
 
 Process* Buffet::ReturnCustomer(double time)

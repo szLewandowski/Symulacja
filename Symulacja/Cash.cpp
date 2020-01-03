@@ -13,22 +13,30 @@ Cash::~Cash()
 	std::cerr << "Delete Cash\n";
 }
 
-bool Cash::free()
+bool Cash::Free()
 {
 	if (size() < 4)return true;
 	return false;
 }
 
-void Cash::AddCustomerToCash(Process* customer)
+bool Cash::AreSame(const double a, const double b) const
 {
-	for(int i=0;i<4;++i)
+	return fabs(a - b) < DBL_EPSILON;
+}
+
+void Cash::AddCustomerToCash()
+{
+	for (int i = 0; i < 4; ++i)
 	{
-		if(cash_desks_[i]==nullptr)
+		if (cash_desks_[i] == nullptr)
 		{
-			cash_desks_[i] = customer;
+			cash_desks_[i] = queue_.front();
+			queue_.pop();
 			return;
 		}
 	}
+	cerr << "ERROR Cash: There is no free cash desk!\n";
+	cin.get();
 }
 
 void Cash::AddCustomerToQueue(Process* customer)
@@ -38,23 +46,30 @@ void Cash::AddCustomerToQueue(Process* customer)
 
 void Cash::RemoveCustomer(const double clock)
 {
-	for(int i=0;i<4;++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		if(cash_desks_[i]!=nullptr && cash_desks_[i]->time()<=clock) //double types comparison 
+		if (cash_desks_[i] != nullptr && AreSame(cash_desks_[i]->time(), clock))
 		{
-			delete cash_desks_[i];
 			cash_desks_[i] = nullptr;
 			return;
 		}
 	}
-	cerr << "ERROR (Cash class) There is no consumer to remove!\n";
+	cerr << "ERROR Cash.cpp: There is no consumer to remove!\n";
 	cin.get();
+}
+
+void Cash::WakeUpIfPossible()
+{
+	if(queue_.empty()==false)
+	{
+		queue_.front()->execute();
+	}
 }
 
 int Cash::size()
 {
 	int counter = 4;
-	for(int i=0;i<4;++i)
+	for (int i = 0; i < 4; ++i)
 	{
 		if (cash_desks_[i] == nullptr)--counter;
 	}

@@ -21,3 +21,4 @@ void Process::activate(const double time)
 	my_event_->event_time_ = time;
 	event_list_->AddNewEvent(my_event_);
 }
+

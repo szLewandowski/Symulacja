@@ -7,10 +7,12 @@ class Cash
 public:
 	Cash();
 	~Cash();
-	bool free();
-	void AddCustomerToCash(Process*);
+	bool Free();
+	bool AreSame(double, double) const;
+	void AddCustomerToCash();
 	void AddCustomerToQueue(Process*);
 	void RemoveCustomer(double);
+	void WakeUpIfPossible();
 private:
 	int size();
 	Process* cash_desks_[4];
