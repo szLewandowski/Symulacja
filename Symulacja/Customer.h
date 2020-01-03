@@ -12,5 +12,4 @@ public:
 	Restaurant* restaurant_;
 	static double NormalDistributionGenerator(const pair<const int, const int> p);
 	static double ExponentialDistributionGenerator(const int average);
-	
 };

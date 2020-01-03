@@ -25,7 +25,7 @@ int main()
 	Process* current_process = new Customer(event_list,restaurant);
 	current_process->activate(0);
 	current_process = nullptr;
-	while (clock<10000)
+	while (clock<100000)
 	{
 		auto current_event = event_list->RemoveFirst();
 		current_process = current_event->proc_;
