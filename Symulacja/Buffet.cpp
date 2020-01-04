@@ -17,6 +17,19 @@ bool Buffet::AreSame(const double a, const double b) const
 	return fabs(a - b) < DBL_EPSILON;
 }
 
+void Buffet::BuffetInfo()
+{
+	cout << "\nBuffet info:\n";
+	cout << "Kolejak do bufetu: " << queue_.size()<<endl;
+	cout << "Procesów w bufecie: " << seats_.size() << endl;
+	int customers = 0;
+	for (auto seat : seats_)
+	{
+		customers += seat->group_size_;
+	}
+	cout << "Zajete miejsca w bufecie: " << customers << endl;
+}
+
 bool Buffet::EnoughFreeSeats()
 {
 	int customers = 0;
@@ -30,16 +43,13 @@ bool Buffet::EnoughFreeSeats()
 		{
 			return true;
 		}
-		return false;
 	}
-	cerr << "ERROR Buffet.cpp: There is no process in queue\n";
-	cin.get();
 	return false;
 }
 
-bool Buffet::QueueEmpty()
+int Buffet::QueueSize()
 {
-	return queue_.empty();
+	return static_cast<int>(queue_.size());
 }
 
 void Buffet::AddToQueue(Process* customer)
@@ -55,16 +65,16 @@ void Buffet::AddToBuffet()
 
 void Buffet::WakeUpIfPossible()
 {
-	if (EnoughFreeSeats())
-	{
-		queue_.front()->execute();
+	for (int i = 0; i < 4; ++i) {
+		if (EnoughFreeSeats() == true)
+		{
+			queue_.front()->execute();
+		}
 	}
 }
 
-Process* Buffet::ReturnCustomer(double time)
+void Buffet::ReturnCustomer(double time)
 {
 	const auto it = find_if(seats_.begin(), seats_.end(), [&](Process* pr) {return  AreSame(time,pr->time()); });
-	//Process* temp = *it;
 	seats_.erase(it);
-	return *it;
 }

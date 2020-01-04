@@ -7,7 +7,7 @@ class Customer :
 	public Process
 {
 public:
-	explicit Customer(Event_list*,Restaurant*);
+	explicit Customer(Event_list*,Restaurant*,int);
 	void execute() override;
 	Restaurant* restaurant_;
 	static double NormalDistributionGenerator(const pair<const int, const int> p);
