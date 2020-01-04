@@ -24,6 +24,16 @@ bool Cash::AreSame(const double a, const double b) const
 	return fabs(a - b) < DBL_EPSILON;
 }
 
+void Cash::CashInfo()
+{
+	cout << "\nCash info:\n";
+	cout << "Kolejka do kasy: " << queue_.size()<<endl;
+	int cash_desk_size = 0;
+	for (int i = 0; i < 4; ++i)
+		if (cash_desks_[i] != nullptr)cash_desk_size++;
+	cout << "Zajete stanowiska kas: " << cash_desk_size<<endl;
+}
+
 void Cash::AddCustomerToCash()
 {
 	for (int i = 0; i < 4; ++i)

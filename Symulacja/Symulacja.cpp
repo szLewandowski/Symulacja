@@ -22,20 +22,23 @@ int main()
 	Restaurant* restaurant = new Restaurant;
 	const auto event_list = new Event_list;
 	auto clock = 0.0;
-	Process* current_process = new Customer(event_list,restaurant);
+	Process* current_process = new Customer(event_list,restaurant,0);
 	current_process->activate(0);
 	current_process = nullptr;
-	while (clock<100000)
+	while (clock<1000000)
 	{
 		auto current_event = event_list->RemoveFirst();
 		current_process = current_event->proc_;
 		clock = current_event->event_time_;
-		cerr << "**************************************************\n";
-		cerr << "New clock: " << clock << endl;
+		cerr << "\n**************************************************\n";
+		cerr << "Current clock: " << clock << endl;
 		current_event = nullptr;
 		current_process->execute();
 		if (current_process->terminated_)
+		{
+			cout << "\nPROCES TERMINATED!\n";
 			delete current_process;
+		}
 		if(step_mode)
 			cin.get();
 	}

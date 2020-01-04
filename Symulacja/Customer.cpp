@@ -2,7 +2,7 @@
 #include <iostream>
 #include <random>
 
-Customer::Customer(Event_list* list,Restaurant* restaurant): Process(list)
+Customer::Customer(Event_list* list,Restaurant* restaurant,int id): Process(list,id)
 {
 	restaurant_ = restaurant;
 	//cerr << "Customer constructor\n";
@@ -10,6 +10,7 @@ Customer::Customer(Event_list* list,Restaurant* restaurant): Process(list)
 
 void Customer::execute()
 {
+	Info();
 	auto active = true;
 	while(active)
 	{
@@ -17,21 +18,17 @@ void Customer::execute()
 		{
 		case 0:
 		{
-			cerr << "--> Pojawienie sie nowej grupy klientow\n";
-			Process* process = new Customer(event_list_, restaurant_);
-			process->activate(time() + NormalDistributionGenerator(make_pair(1900, 200)));
+			cerr << "\n--> Faza 0: Pojawienie sie nowej grupy klientow";
+			Process* process = new Customer(event_list_, restaurant_,id_);
+			process->activate(time() + NormalDistributionGenerator(make_pair(1300, 200)));
 			process = nullptr;
 			if (true)//(rand() % 2 == 0)
 			{
 				//buffet group
 				restaurant_->buffet_->AddToQueue(this);
-				if (restaurant_->buffet_->EnoughFreeSeats())
+				phase_ = 9;
+				if (restaurant_->buffet_->EnoughFreeSeats() == false || restaurant_->buffet_->QueueSize() > 1)
 				{
-					phase_ = 9;
-				}
-				else
-				{
-					phase_ = 9;
 					active = false;
 				}
 			}
@@ -64,7 +61,7 @@ void Customer::execute()
 			break;
 		case 7:
 			{
-				cerr << "--> Rozpoczecie obslugi przy kasie";
+				cerr << "\n--> Faza 7: Rozpoczecie obslugi przy kasie";
 				restaurant_->cash_->AddCustomerToCash();
 				activate(time() + ExponentialDistributionGenerator(200));
 				phase_ = 8;
@@ -73,7 +70,7 @@ void Customer::execute()
 			break;
 		case 8:
 			{
-				cerr << "--> Koniec obslugi przy kasie";
+				cerr << "\n--> Faza 8: Koniec obslugi przy kasie";
 				restaurant_->cash_->RemoveCustomer(time());
 				restaurant_->cash_->WakeUpIfPossible();
 				terminated_ = true;
@@ -82,7 +79,7 @@ void Customer::execute()
 			break;
 		case 9:
 			{
-				cerr << "--> Poczatek obslugi w bufecie";
+				cerr << "\n--> Faza 9: Poczatek obslugi w bufecie ";
 				restaurant_->buffet_->AddToBuffet();
 				activate(time() + NormalDistributionGenerator(make_pair(3200, 100)));
 				phase_ = 10;
@@ -91,11 +88,9 @@ void Customer::execute()
 			break;
 		case 10:
 			{
-				cerr << "--> Koniec obslugi w bufecie";
-				cin.get();
-				Process* temp = restaurant_->buffet_->ReturnCustomer(this->time());
-				cin.get();
-				restaurant_->cash_->AddCustomerToQueue(restaurant_->buffet_->ReturnCustomer(this->time()));
+				cerr << "\n--> Faza 10: Koniec obslugi w bufecie";
+				restaurant_->buffet_->ReturnCustomer(time());
+				restaurant_->cash_->AddCustomerToQueue(this);
 				restaurant_->buffet_->WakeUpIfPossible();
 				phase_ = 7;
 				if(restaurant_->cash_->Free()==false)
@@ -106,6 +101,8 @@ void Customer::execute()
 			break;			
 		}
 	}
+	restaurant_->buffet_->BuffetInfo();
+	restaurant_->cash_->CashInfo();
 }
 
 double Customer::NormalDistributionGenerator(const pair<const int, const int> p)

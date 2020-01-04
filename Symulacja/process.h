@@ -5,11 +5,13 @@
 class Process
 {
 public:
-	Process(Event_list*);
+	Process(Event_list*,int);
 	~Process();
 	void virtual execute() = 0;
 	double time();
+	void Info();
 	void activate(double);
+	int id_;
 	int phase_;
 	bool terminated_;
 	const int group_size_ = (rand() % 4) + 1;
