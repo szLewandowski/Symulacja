@@ -13,7 +13,7 @@ public:
 	int QueueSize();
 	void AddToQueue(Process*);
 	void AddToBuffet();
-	void WakeUpIfPossible();
+	void WakeUpIfPossible(double);
 	void ReturnCustomer(double);
 private:
 	static const int number_of_seats_ = 14;

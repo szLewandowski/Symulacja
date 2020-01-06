@@ -8,8 +8,10 @@ class Customer :
 {
 public:
 	explicit Customer(Event_list*,Restaurant*,int);
-	void execute() override;
+	void execute(double) override;
 	Restaurant* restaurant_;
 	static double NormalDistributionGenerator(const pair<const int, const int> p);
 	static double ExponentialDistributionGenerator(const int average);
+	bool drink_ = false;
+	bool dish_ = false;
 };

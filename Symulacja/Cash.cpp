@@ -68,11 +68,11 @@ void Cash::RemoveCustomer(const double clock)
 	cin.get();
 }
 
-void Cash::WakeUpIfPossible()
+void Cash::WakeUpIfPossible(const double new_time)
 {
 	if(queue_.empty()==false)
 	{
-		queue_.front()->execute();
+		queue_.front()->execute(new_time);
 	}
 }
 

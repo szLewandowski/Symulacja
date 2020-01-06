@@ -29,3 +29,8 @@ void Process::activate(const double time)
 	event_list_->AddNewEvent(my_event_);
 }
 
+void Process::TimeUpdate(const double new_time)
+{
+	my_event_->event_time_ = new_time;
+}
+
