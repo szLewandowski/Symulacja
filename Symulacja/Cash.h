@@ -13,7 +13,7 @@ public:
 	void AddCustomerToCash();
 	void AddCustomerToQueue(Process*);
 	void RemoveCustomer(double);
-	void WakeUpIfPossible();
+	void WakeUpIfPossible(double);
 private:
 	int size();
 	Process* cash_desks_[4]{};

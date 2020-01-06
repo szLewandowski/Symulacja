@@ -1,11 +1,12 @@
 #pragma once
 
+
 class Manager
 {
 public:
 	Manager();
 	~Manager();
-	bool Free();
+	bool Free() const;
 	void Reservation();
 	void EndReservation();
 private:

@@ -11,7 +11,7 @@ Manager::~Manager()
 	std::cerr << "Delete Manager\n";
 }
 
-bool Manager::Free()
+bool Manager::Free() const
 {
 	return is_free_;
 }

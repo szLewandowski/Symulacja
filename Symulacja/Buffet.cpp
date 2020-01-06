@@ -63,12 +63,12 @@ void Buffet::AddToBuffet()
 	queue_.pop();
 }
 
-void Buffet::WakeUpIfPossible()
+void Buffet::WakeUpIfPossible(const double new_time)
 {
 	for (int i = 0; i < 4; ++i) {
 		if (EnoughFreeSeats() == true)
 		{
-			queue_.front()->execute();
+			queue_.front()->execute(new_time);
 		}
 	}
 }

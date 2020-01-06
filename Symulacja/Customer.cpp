@@ -8,8 +8,9 @@ Customer::Customer(Event_list* list,Restaurant* restaurant,int id): Process(list
 	//cerr << "Customer constructor\n";
 }
 
-void Customer::execute()
+void Customer::execute(const double new_time)
 {
+	TimeUpdate(new_time);
 	Info();
 	auto active = true;
 	while(active)
@@ -20,9 +21,9 @@ void Customer::execute()
 		{
 			cerr << "\n--> Faza 0: Pojawienie sie nowej grupy klientow";
 			Process* process = new Customer(event_list_, restaurant_,id_);
-			process->activate(time() + NormalDistributionGenerator(make_pair(1300, 200)));
+			process->activate(time() + NormalDistributionGenerator(make_pair(800, 200)));
 			process = nullptr;
-			if (true)//(rand() % 2 == 0)
+			if (false)//(rand() % 2 == 0)
 			{
 				//buffet group
 				restaurant_->buffet_->AddToQueue(this);
@@ -36,28 +37,80 @@ void Customer::execute()
 			{
 				//restaurant group
 				restaurant_->tables_->AddToQueue(this);
-
+				phase_ = 1;
+				if (restaurant_->tables_->EnoughFreeSeats() == false || restaurant_->manager_->Free() == false || restaurant_->tables_->QueueSize() > 1)
+				{
+					active = false;
+				}
 			}
 
 		}
 		break;
 		case 1:
-			cerr << "Poczatek obslugi przez managera";
+			{
+				cerr << "\n--> Faza 1: Poczatek obslugi przez managera";
+				restaurant_->tables_->TakeToManager();
+				restaurant_->manager_->Reservation();
+				activate(time() + 30);
+				phase_ = 2;
+				active = false;
+			}
 			break;
 		case 2:
-			cerr << "Koniec obslugi przez managera";
+			{
+				cerr << "\n--> Faza 2: Koniec obslugi przez managera";
+				restaurant_->manager_->EndReservation();
+				restaurant_->tables_->AddToTables(this);
+				restaurant_->tables_->WakeUpQueueForTables(restaurant_->manager_->Free(),time());
+				phase_ = 3;
+				if(restaurant_->waiters_->Free()==false)
+				{
+					active = false;
+				}
+			}
 			break;
 		case 3:
-			cerr << "Kelner podaje napoj";
+			{
+				cerr << "\n--> Faza 3: Kelner podaje napoj";
+				restaurant_->waiters_->Reservation();
+				restaurant_->tables_->RemovePendingProcess();
+				activate(time() + ExponentialDistributionGenerator(300));
+				phase_ = 4;
+				active = false;
+			}
 			break;
 		case 4:
-			cerr << "Kelner podaje danie glowne";
+			{
+				cerr << "\n--> Faza 4: Kelner podaje danie glowne";
+				drink_ = true;
+				activate(time() + ExponentialDistributionGenerator(1700));
+				phase_ = 5;
+				active = false;
+			}
 			break;
 		case 5:
-			cerr << "Rozpoczecie konsumpcji";
+			{
+				cerr << "\n--> Faza 5: Rozpoczecie konsumpcji";
+				dish_ = true;
+				restaurant_->waiters_->EndReservation();
+				restaurant_->tables_->WakeUpPendingProcessQueue(time());
+				activate(time() + ExponentialDistributionGenerator(1900));
+				phase_ = 6;
+				active = false;
+			}
 			break;
 		case 6:
-			cerr << "Koniec konsumpcji";
+			{
+				cerr << "\n--> Faza 6: Koniec konsumpcji";
+				restaurant_->tables_->RemoveFromTables(this);
+				restaurant_->cash_->AddCustomerToQueue(this);
+				restaurant_->tables_->WakeUpQueueForTables(restaurant_->manager_->Free(), time());
+				phase_ = 7;
+				if(restaurant_->cash_->Free()==false)
+				{
+					active = false;
+				}
+			}
 			break;
 		case 7:
 			{
@@ -72,7 +125,7 @@ void Customer::execute()
 			{
 				cerr << "\n--> Faza 8: Koniec obslugi przy kasie";
 				restaurant_->cash_->RemoveCustomer(time());
-				restaurant_->cash_->WakeUpIfPossible();
+				restaurant_->cash_->WakeUpIfPossible(time());
 				terminated_ = true;
 				active = false;
 			}
@@ -91,7 +144,7 @@ void Customer::execute()
 				cerr << "\n--> Faza 10: Koniec obslugi w bufecie";
 				restaurant_->buffet_->ReturnCustomer(time());
 				restaurant_->cash_->AddCustomerToQueue(this);
-				restaurant_->buffet_->WakeUpIfPossible();
+				restaurant_->buffet_->WakeUpIfPossible(time());
 				phase_ = 7;
 				if(restaurant_->cash_->Free()==false)
 				{
@@ -101,7 +154,9 @@ void Customer::execute()
 			break;			
 		}
 	}
-	restaurant_->buffet_->BuffetInfo();
+	//restaurant_->buffet_->BuffetInfo();
+	restaurant_->tables_->TableInfo();
+	restaurant_->waiters_->WaitersInfo();
 	restaurant_->cash_->CashInfo();
 }
 
