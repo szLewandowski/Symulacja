@@ -88,8 +88,9 @@ void Event_list::DeleteEvent(int id)
 }
 */
 
-void Event_list::AlarmDecimation()
+int Event_list::AlarmDecimation(vector<int>* id, bool& manager)
 {
+    int waiters_free = 0;
     if (first_ == nullptr)
 	{
     	//List empty
@@ -98,8 +99,14 @@ void Event_list::AlarmDecimation()
     else if(first_!=nullptr && first_==last_)
     {
     	//single element list
-        if (rand() % 10 < 3)
+        if (rand() % 10 < 3 && first_->proc_->phase_ != 0)
 	    {
+            id->push_back(first_->proc_->id_);
+            if (first_->proc_->phase_ == 4 || first_->proc_->phase_ == 5)
+            {
+                waiters_free++;
+            }
+            if (first_->proc_->phase_ == 2)manager = true;
             delete first_->proc_;
             first_ = last_ = nullptr;
             cerr << "Event List - one client removed\n";
@@ -111,42 +118,67 @@ void Event_list::AlarmDecimation()
     	//removing first elements
         while (true) {
             temp = first_;
-            if (rand() % 10 < 3)
+            if (rand() % 10 < 3 && temp->proc_->phase_ != 0)
             {
-            	if(first_==last_)
+                if (first_ == last_)
             	{
+                    id->push_back(temp->proc_->id_);
+                    if (temp->proc_->phase_ == 4 || temp->proc_->phase_ == 5)
+                    {
+                        waiters_free++;
+                    }
+                    if (temp->proc_->phase_ == 2)manager = true;
                     delete temp->proc_;
                     first_ = last_ = nullptr;
-            		return;
+            		return waiters_free;
             	}
                 first_->next_->prev_ = nullptr;
                 first_ = first_->next_;
+                id->push_back(temp->proc_->id_);
+                if (temp->proc_->phase_ == 4 || temp->proc_->phase_ == 5)
+                {
+                    waiters_free++;
+                }
+                if (temp->proc_->phase_ == 2)manager = true;
                 delete temp->proc_;
             }
             else
             {
-                if (temp != last_) {
+                if (temp != last_) 
+                {
                     temp = first_->next_;
                     break;
                 }
-                else return;
+                return waiters_free;
             }
         }
     	//removing rest elements
         while (true)
         {
-            if (rand() % 10 < 3)
+            if (rand() % 10 < 3 && temp->proc_->phase_ != 0)
             {
                 if (temp == last_)
                 {
                     temp->prev_->next_ = nullptr;
                     last_ = temp->prev_;
+                    id->push_back(temp->proc_->id_);
+                    if (temp->proc_->phase_ == 4 || temp->proc_->phase_ == 5)
+                    {
+                        waiters_free++;
+                    }
+                    if (temp->proc_->phase_ == 2)manager = true;
                     delete temp->proc_;
-                    return;
+                    return waiters_free;
                 }
                 temp->prev_->next_ = temp->next_;
                 temp->next_->prev_ = temp->prev_;
                 Event* help = temp->next_;
+                id->push_back(temp->proc_->id_);
+                if (temp->proc_->phase_ == 4 || temp->proc_->phase_ == 5)
+                {
+                    waiters_free++;
+                }
+                if (temp->proc_->phase_ == 2)manager = true;
                 delete temp->proc_;
                 temp = help;
                 help = nullptr;
@@ -157,10 +189,11 @@ void Event_list::AlarmDecimation()
                 {
                     temp = temp->next_;
                 }
-                else return;
+                else return waiters_free;
             }
         }
     }
+    return waiters_free;
 }
 
 double Event_list::FirstEventTime()
@@ -170,17 +203,17 @@ double Event_list::FirstEventTime()
     return -1;
 }
 
-void Event_list::TestingFunction()
+void Event_list::TestingFunction() const
 {
     cout << "Event_list: Testing function:\n";
-	if(first_==nullptr || first_==last_)
-	{
+    if (first_ == nullptr || first_ == last_)
+    {
         cout << "Nothing to test :(\n";
-	}
+    }
     else
     {
         Event* temp = first_;
-        while (temp!=nullptr)       //a bit risky, consider (temp!=last_) with extra cout
+        while (temp != nullptr)       //a bit risky, consider (temp!=last_) with extra cout
         {
             cout << temp->event_time_ << "  ";
             temp = temp->next_;

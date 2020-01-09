@@ -12,9 +12,9 @@ public:
     void AddNewEvent(Event* add_event);
     Event* RemoveFirst();
     //void DeleteEvent(int id);
-    void AlarmDecimation();
+    int AlarmDecimation(vector<int>*, bool&);
     double FirstEventTime();
-    void TestingFunction();
+    void TestingFunction() const;
 private:
     Event* first_ = nullptr;
     Event* last_ = nullptr;

@@ -5,7 +5,7 @@ Cash::Cash()
 {
 	std::cerr << "Make Cash\n";
 	for (int i = 0; i < 4; ++i)
-		cash_desks_[i] = nullptr;
+		cash_desks_[i] = 0;
 }
 
 Cash::~Cash()
@@ -30,7 +30,7 @@ void Cash::CashInfo()
 	cout << "Kolejka do kasy: " << queue_.size()<<endl;
 	int cash_desk_size = 0;
 	for (int i = 0; i < 4; ++i)
-		if (cash_desks_[i] != nullptr)cash_desk_size++;
+		if (cash_desks_[i] != 0)cash_desk_size++;
 	cout << "Zajete stanowiska kas: " << cash_desk_size<<endl;
 }
 
@@ -38,9 +38,9 @@ void Cash::AddCustomerToCash()
 {
 	for (int i = 0; i < 4; ++i)
 	{
-		if (cash_desks_[i] == nullptr)
+		if (cash_desks_[i] == 0)
 		{
-			cash_desks_[i] = queue_.front();
+			cash_desks_[i] = queue_.front()->id_;
 			queue_.pop();
 			return;
 		}
@@ -54,13 +54,13 @@ void Cash::AddCustomerToQueue(Process* customer)
 	queue_.push(customer);
 }
 
-void Cash::RemoveCustomer(const double clock)
+void Cash::RemoveCustomer(Process* customer)
 {
 	for (int i = 0; i < 4; ++i)
 	{
-		if (cash_desks_[i] != nullptr && AreSame(cash_desks_[i]->time(), clock))
+		if (cash_desks_[i] == customer->id_)
 		{
-			cash_desks_[i] = nullptr;
+			cash_desks_[i] = 0;
 			return;
 		}
 	}
@@ -70,9 +70,43 @@ void Cash::RemoveCustomer(const double clock)
 
 void Cash::WakeUpIfPossible(const double new_time)
 {
-	if(queue_.empty()==false)
+	if(queue_.empty()==false && Free())
 	{
 		queue_.front()->execute(new_time);
+	}
+}
+
+void Cash::Alarm()
+{
+	if (queue_.empty() == false)
+	{
+		for (int i = 0; i < static_cast<int>(queue_.size()); ++i)
+		{
+			Process* temp = queue_.front();
+			queue_.pop();
+			if (rand() % 10 < 3)
+			{
+				delete temp;
+			}
+			else
+			{
+				queue_.push(temp);
+			}
+		}
+	}
+}
+
+void Cash::Cleaning(vector<int>* id)
+{
+	for (auto it = id->begin(); it != id->end(); ++it)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			if (cash_desks_[i] == *it)
+			{
+				cash_desks_[i] = 0;
+			}
+		}
 	}
 }
 
@@ -81,7 +115,7 @@ int Cash::size()
 	int counter = 4;
 	for (int i = 0; i < 4; ++i)
 	{
-		if (cash_desks_[i] == nullptr)--counter;
+		if (cash_desks_[i] == 0)--counter;
 	}
 	return counter;
 }
