@@ -4,7 +4,11 @@
 
 Buffet::Buffet()
 {
-	std::cerr << "Make Buffet\n";	
+	std::cerr << "Make Buffet\n";
+	for (int i = 0; i < number_of_seats_; ++i)
+	{
+		seats_[i] = 0;
+	}
 }
 
 Buffet::~Buffet()
@@ -21,25 +25,24 @@ void Buffet::BuffetInfo()
 {
 	cout << "\nBuffet info:\n";
 	cout << "Kolejak do bufetu: " << queue_.size()<<endl;
-	cout << "Procesów w bufecie: " << seats_.size() << endl;
-	int customers = 0;
-	for (auto seat : seats_)
+	int seats_counter = 0;
+	for (int i = 0; i < number_of_seats_; ++i)
 	{
-		customers += seat->group_size_;
+		if (seats_[i] != 0)seats_counter++;
 	}
-	cout << "Zajete miejsca w bufecie: " << customers << endl;
+	cout << "Zajete miejsca w bufecie: " << seats_counter << "/" << number_of_seats_ << endl;
 }
 
 bool Buffet::EnoughFreeSeats()
 {
-	int customers = 0;
-	for (auto seat : seats_)
+	int seats_counter = 0;
+	for (int i = 0; i < number_of_seats_; ++i)
 	{
-		customers += seat->group_size_;
+		if (seats_[i] != 0)seats_counter++;
 	}
 	if(queue_.empty()==false)
 	{
-		if (queue_.front()->group_size_ <= number_of_seats_ - customers)
+		if (queue_.front()->group_size_ <= number_of_seats_ - seats_counter)
 		{
 			return true;
 		}
@@ -59,8 +62,19 @@ void Buffet::AddToQueue(Process* customer)
 
 void Buffet::AddToBuffet()
 {
-	seats_.push_back(queue_.front());
-	queue_.pop();
+	if(queue_.empty()==false)
+	{
+		int counter = 0;
+		for (int i = 0; i < number_of_seats_; ++i)
+		{
+			if (counter < queue_.front()->group_size_ && seats_[i] == 0)
+			{
+				seats_[i] = queue_.front()->id_;
+				counter++;
+			}
+		}
+		queue_.pop();
+	}
 }
 
 void Buffet::WakeUpIfPossible(const double new_time)
@@ -73,8 +87,47 @@ void Buffet::WakeUpIfPossible(const double new_time)
 	}
 }
 
-void Buffet::ReturnCustomer(double time)
+void Buffet::ReturnCustomer(const int id)
 {
-	const auto it = find_if(seats_.begin(), seats_.end(), [&](Process* pr) {return  AreSame(time,pr->time()); });
-	seats_.erase(it);
+	for (int i = 0; i < number_of_seats_; ++i)
+	{
+		if (seats_[i] == id)
+		{
+			seats_[i] = 0;
+		}
+	}
+}
+
+void Buffet::Alarm()
+{
+	if (queue_.empty() == false)
+	{
+		for (int i = 0; i < static_cast<int>(queue_.size()); ++i)
+		{
+			Process* temp = queue_.front();
+			queue_.pop();
+			if (rand() % 10 < 3)
+			{
+				delete temp;
+			}
+			else
+			{
+				queue_.push(temp);
+			}
+		}
+	}
+}
+
+void Buffet::Cleaning(vector<int>* id)
+{
+	for (auto it = id->begin(); it != id->end(); ++it)
+	{
+		for (int i = 0; i < number_of_seats_; ++i)
+		{
+			if(seats_[i]==*it)
+			{
+				seats_[i] = 0;
+			}
+		}
+	}
 }

@@ -21,9 +21,9 @@ void Customer::execute(const double new_time)
 		{
 			cerr << "\n--> Faza 0: Pojawienie sie nowej grupy klientow";
 			Process* process = new Customer(event_list_, restaurant_,id_);
-			process->activate(time() + NormalDistributionGenerator(make_pair(800, 200)));
+			process->activate(time() + NormalDistributionGenerator(make_pair(300, 50)));
 			process = nullptr;
-			if (false)//(rand() % 2 == 0)
+			if (rand() % 2 == 0)
 			{
 				//buffet group
 				restaurant_->buffet_->AddToQueue(this);
@@ -83,7 +83,7 @@ void Customer::execute(const double new_time)
 			{
 				cerr << "\n--> Faza 4: Kelner podaje danie glowne";
 				drink_ = true;
-				activate(time() + ExponentialDistributionGenerator(1700));
+				activate(time() + ExponentialDistributionGenerator(170));
 				phase_ = 5;
 				active = false;
 			}
@@ -104,7 +104,6 @@ void Customer::execute(const double new_time)
 				cerr << "\n--> Faza 6: Koniec konsumpcji";
 				restaurant_->tables_->RemoveFromTables(this);
 				restaurant_->cash_->AddCustomerToQueue(this);
-				restaurant_->tables_->WakeUpQueueForTables(restaurant_->manager_->Free(), time());
 				phase_ = 7;
 				if(restaurant_->cash_->Free()==false)
 				{
@@ -124,7 +123,7 @@ void Customer::execute(const double new_time)
 		case 8:
 			{
 				cerr << "\n--> Faza 8: Koniec obslugi przy kasie";
-				restaurant_->cash_->RemoveCustomer(time());
+				restaurant_->cash_->RemoveCustomer(this);
 				restaurant_->cash_->WakeUpIfPossible(time());
 				terminated_ = true;
 				active = false;
@@ -142,7 +141,7 @@ void Customer::execute(const double new_time)
 		case 10:
 			{
 				cerr << "\n--> Faza 10: Koniec obslugi w bufecie";
-				restaurant_->buffet_->ReturnCustomer(time());
+				restaurant_->buffet_->ReturnCustomer(id_);
 				restaurant_->cash_->AddCustomerToQueue(this);
 				restaurant_->buffet_->WakeUpIfPossible(time());
 				phase_ = 7;
@@ -154,7 +153,7 @@ void Customer::execute(const double new_time)
 			break;			
 		}
 	}
-	//restaurant_->buffet_->BuffetInfo();
+	restaurant_->buffet_->BuffetInfo();
 	restaurant_->tables_->TableInfo();
 	restaurant_->waiters_->WaitersInfo();
 	restaurant_->cash_->CashInfo();
@@ -162,14 +161,14 @@ void Customer::execute(const double new_time)
 
 double Customer::NormalDistributionGenerator(const pair<const int, const int> p)
 {
-	static default_random_engine generator;
+	static default_random_engine generator(seed_);
 	normal_distribution<double> distribution(p.first, p.second);
 	return distribution(generator);
 }
 
 double Customer::ExponentialDistributionGenerator(const int average)
 {
-	static default_random_engine generator;
+	static default_random_engine generator(seed_);
 	const exponential_distribution<double> distribution(average);
 	return 1 / distribution(generator);
 }

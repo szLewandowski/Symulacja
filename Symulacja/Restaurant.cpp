@@ -24,6 +24,37 @@ Restaurant::~Restaurant()
 	cash_ = nullptr;
 }
 
+void Restaurant::Alarm(vector<int>* id, const int waiters_free, const bool manager_free)
+{
+    cout << "Tables: \n";
+    tables_->Alarm();
+    cout << "Buffet: \n";
+    buffet_->Alarm();
+    cout << "Cash: \n";
+    cash_->Alarm();
+	if(manager_free)
+	{
+        manager_->EndReservation();
+	}
+    tables_->Cleaning(id);
+    for (int i = 0; i < waiters_free; ++i)
+    {
+        waiters_->EndReservation();
+    }
+    buffet_->Cleaning(id);
+    cash_->Cleaning(id);
+}
+
+void Restaurant::WakeUp(const double clock)
+{
+    for (int i = 0; i < 14; ++i)
+    {
+        cash_->WakeUpIfPossible(clock);
+        buffet_->WakeUpIfPossible(clock);
+    }
+    tables_->WakeUpQueueForTables(manager_->Free(), clock);
+}
+
 /*
  *
 //Generatory:

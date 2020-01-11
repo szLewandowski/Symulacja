@@ -4,6 +4,7 @@
 #include "Waiters.h"
 #include "Buffet.h"
 #include "Cash.h"
+#include "Event_list.h"
 
 class Restaurant
 {
@@ -15,13 +16,8 @@ public:
 	Waiters* waiters_;
 	Buffet* buffet_;
 	Cash* cash_;
-	
-	void hello()
-	{
-		cout << "Hello Restaurant!\n";
-		cin.get();
-	}
-	
+	void Alarm(vector<int>*, int, bool);
+	void WakeUp(double);
 	//double Uniform();
 	//double NormalDistributionGenerator(int average, int variance);
 	//double ExponentialDistributionGenerator(int average);

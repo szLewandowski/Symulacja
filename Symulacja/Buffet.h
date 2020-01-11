@@ -14,10 +14,12 @@ public:
 	void AddToQueue(Process*);
 	void AddToBuffet();
 	void WakeUpIfPossible(double);
-	void ReturnCustomer(double);
+	void ReturnCustomer(int);
+	void Alarm();
+	void Cleaning(vector<int>*);
 private:
 	static const int number_of_seats_ = 14;
-	vector<Process*> seats_;
+	int seats_[number_of_seats_] = {};
 	queue<Process*> queue_;
 };
 

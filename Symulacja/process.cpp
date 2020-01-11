@@ -19,7 +19,7 @@ double Process::time()
 
 void Process::Info()
 {
-	cout << "\nID: " << id_ << "  FAZA: " << phase_ << "   ROZMAR GRUPY: " << group_size_ << endl;
+	cout << "\nID: " << id_ << "  FAZA: " << phase_ << "   ROZMAR GRUPY: " << group_size_ << "   CZAS: " << time()<< endl;
 }
 
 void Process::activate(const double time)

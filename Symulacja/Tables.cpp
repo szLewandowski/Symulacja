@@ -362,3 +362,68 @@ void Tables::RemovePendingProcess()
 {
 	pending_processes_.pop();
 }
+
+void Tables::Alarm()
+{
+	if (queue_.empty() == false)
+	{
+		for (int i = 0; i < static_cast<int>(queue_.size()); ++i)
+		{
+			Process* temp = queue_.front();
+			queue_.pop();
+			if (rand() % 10 < 3)
+			{
+				delete temp;
+			}
+			else
+			{
+				queue_.push(temp);
+			}
+		}
+	}
+	if (pending_processes_.empty() == false)
+	{
+		for (int i = 0; i < static_cast<int>(pending_processes_.size()); ++i)
+		{
+			Process* temp = pending_processes_.front();
+			pending_processes_.pop();
+			if (rand() % 10 < 3)
+			{
+				RemoveFromTables(temp);
+				delete temp;
+			}
+			else
+			{
+				pending_processes_.push(temp);
+			}
+		}
+	}
+}
+
+void Tables::Cleaning(vector<int>* id)
+{
+	for (auto it = id->begin(); it != id->end(); ++it)
+	{
+		for (int i = 0; i < double_seats_ * 2; ++i)
+		{
+			if (double_tables_[0][i] == *it)
+			{
+				double_tables_[0][i] = 0;
+			}
+		}
+		for (int i = 0; i < triple_seats_ * 3; ++i)
+		{
+			if (triple_tables_[0][i] == *it)
+			{
+				triple_tables_[0][i] = 0;
+			}
+		}
+		for (int i = 0; i < quadruple_seats_ * 4; ++i)
+		{
+			if (quadruple_tables_[0][i] == *it)
+			{
+				quadruple_tables_[0][i] = 0;
+			}
+		}
+	}
+}

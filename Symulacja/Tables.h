@@ -17,6 +17,8 @@ public:
 	void WakeUpPendingProcessQueue(double);
 	void WaitersService();
 	void RemovePendingProcess();
+	void Alarm();
+	void Cleaning(vector<int>*);
 private:
 	queue<Process*> queue_;
 	queue<Process*> pending_processes_;
