@@ -5,13 +5,14 @@
 #include "Customer.h"
 using namespace std;
 
+const int kSeed = 123456;
 double NormalDistributionGenerator(const pair<const int, const int> p) {
-	static default_random_engine generator;
+	static default_random_engine generator(kSeed);
 	normal_distribution<double> distribution(p.first, p.second);
 	return distribution(generator);
 }
 double ExponentialDistributionGenerator(const int average) {
-	static default_random_engine generator;
+	static default_random_engine generator(kSeed);
 	const exponential_distribution<double> distribution(average);
 	return 1 / distribution(generator);
 }

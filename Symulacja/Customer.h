@@ -10,6 +10,7 @@ public:
 	explicit Customer(Event_list*,Restaurant*,int);
 	void execute(double) override;
 	Restaurant* restaurant_;
+	static const int seed_ = 123456;
 	static double NormalDistributionGenerator(const pair<const int, const int> p);
 	static double ExponentialDistributionGenerator(const int average);
 	bool drink_ = false;

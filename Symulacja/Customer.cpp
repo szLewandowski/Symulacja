@@ -161,14 +161,14 @@ void Customer::execute(const double new_time)
 
 double Customer::NormalDistributionGenerator(const pair<const int, const int> p)
 {
-	static default_random_engine generator;
+	static default_random_engine generator(seed_);
 	normal_distribution<double> distribution(p.first, p.second);
 	return distribution(generator);
 }
 
 double Customer::ExponentialDistributionGenerator(const int average)
 {
-	static default_random_engine generator;
+	static default_random_engine generator(seed_);
 	const exponential_distribution<double> distribution(average);
 	return 1 / distribution(generator);
 }
