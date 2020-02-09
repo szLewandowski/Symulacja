@@ -1,5 +1,6 @@
 #include "Cash.h"
 #include <iostream>
+#include "fstream"
 
 Cash::Cash()
 {
@@ -34,7 +35,7 @@ void Cash::CashInfo()
 	cout << "Zajete stanowiska kas: " << cash_desk_size<<endl;
 }
 
-void Cash::AddCustomerToCash()
+void Cash::AddCustomerToCash(const double time)
 {
 	for (int i = 0; i < 4; ++i)
 	{
@@ -42,6 +43,9 @@ void Cash::AddCustomerToCash()
 		{
 			cash_desks_[i] = queue_.front()->id_;
 			queue_.pop();
+			ofstream d_output("punkt_d.txt", ios::app);
+			d_output << time << " " << queue_.size() << endl;
+			d_output.close();
 			return;
 		}
 	}
@@ -49,9 +53,12 @@ void Cash::AddCustomerToCash()
 	cin.get();
 }
 
-void Cash::AddCustomerToQueue(Process* customer)
+void Cash::AddCustomerToQueue(Process* customer, const double time)
 {
 	queue_.push(customer);
+	ofstream d_output("punkt_d.txt", ios::app);
+	d_output << time << " " << queue_.size() << endl;
+	d_output.close();
 }
 
 void Cash::RemoveCustomer(Process* customer)
@@ -70,13 +77,13 @@ void Cash::RemoveCustomer(Process* customer)
 
 void Cash::WakeUpIfPossible(const double new_time)
 {
-	if(queue_.empty()==false && Free())
+	if (queue_.empty() == false && Free())
 	{
 		queue_.front()->execute(new_time);
 	}
 }
 
-void Cash::Alarm()
+void Cash::Alarm(const double time)
 {
 	if (queue_.empty() == false)
 	{
@@ -86,6 +93,9 @@ void Cash::Alarm()
 			queue_.pop();
 			if (rand() % 10 < 3)
 			{
+				ofstream d_output("punkt_d.txt", ios::app);
+				d_output << time << " " << queue_.size() << endl;
+				d_output.close();
 				delete temp;
 			}
 			else

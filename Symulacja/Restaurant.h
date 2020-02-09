@@ -16,8 +16,8 @@ public:
 	Waiters* waiters_;
 	Buffet* buffet_;
 	Cash* cash_;
-	void Alarm(vector<int>*, int, bool);
-	void WakeUp(double);
+	void Alarm(vector<int>*, int, bool, double);
+	void WakeUp(double, int);
 	//double Uniform();
 	//double NormalDistributionGenerator(int average, int variance);
 	//double ExponentialDistributionGenerator(int average);

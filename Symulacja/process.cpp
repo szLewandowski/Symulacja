@@ -4,6 +4,23 @@ Process::Process(Event_list* list,int id): phase_(0), terminated_(false),event_l
 {
 	cerr << "\nProcess: New process created!";
 	my_event_ = new Event(this);
+	const int random = rand() % 9;
+	if(random==0)
+	{
+		group_size_ = 1;
+	}
+	else if (random>0 && random<4)
+	{
+		group_size_ = 2;
+	}
+	else if(random>3 && random<7)
+	{
+		group_size_ = 3;
+	}
+	else
+	{
+		group_size_ = 4;
+	}
 }
 
 Process::~Process()

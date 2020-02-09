@@ -5,7 +5,7 @@
 #include "Customer.h"
 using namespace std;
 
-const int kSeed = 123456;
+const int kSeed = 8599765;
 double NormalDistributionGenerator(const pair<const int, const int> p) {
 	static default_random_engine generator(kSeed);
 	normal_distribution<double> distribution(p.first, p.second);
@@ -34,10 +34,10 @@ int main()
 	int terminated_counter = 0;
 	int highest_id = 0;
 
-	const pair<int, int> alarm_distribution = make_pair(12200, 50);
+	const pair<int, int> alarm_distribution = make_pair(25000, 500);
 	double alarm_time = NormalDistributionGenerator(alarm_distribution);
 	
-	while (clock < 300000)
+	while (clock < 1000000 || terminated_counter < 1000)
 	{
 		if (event_list->FirstEventTime() > alarm_time)
 		{
@@ -52,7 +52,8 @@ int main()
 			int waiters_free = event_list->AlarmDecimation(deleted, manager);
 			cout << "Event list: " << deleted->size() << endl;
 			//event_list->TestingFunction();
-			restaurant->Alarm(deleted, waiters_free, manager);
+			restaurant->Alarm(deleted, waiters_free, manager, clock);
+			delete deleted;
 			alarm_time += NormalDistributionGenerator(alarm_distribution);
 			cerr << "NEW ALARM WILL BE: " << alarm_time << endl;
 			prev_clock = clock;
@@ -61,7 +62,7 @@ int main()
 			restaurant->tables_->TableInfo();
 			restaurant->waiters_->WaitersInfo();
 			restaurant->cash_->CashInfo();
-			restaurant->WakeUp(clock);
+			restaurant->WakeUp(clock, waiters_free);
 			cerr << "\n************************************************************************************\n";
 			continue;
 		}		
@@ -97,6 +98,6 @@ int main()
 	}
 	cout << "\nProcesses created: " << highest_id << endl;
 	cout << "Processes deleted: " << terminated_counter << endl;
-
+	delete restaurant;
 	return 0;
 }

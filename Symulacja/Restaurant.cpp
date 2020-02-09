@@ -24,14 +24,14 @@ Restaurant::~Restaurant()
 	cash_ = nullptr;
 }
 
-void Restaurant::Alarm(vector<int>* id, const int waiters_free, const bool manager_free)
+void Restaurant::Alarm(vector<int>* id, const int waiters_free, const bool manager_free, const double time)
 {
     cout << "Tables: \n";
-    tables_->Alarm();
+    tables_->Alarm(time);
     cout << "Buffet: \n";
     buffet_->Alarm();
     cout << "Cash: \n";
-    cash_->Alarm();
+    cash_->Alarm(time);
 	if(manager_free)
 	{
         manager_->EndReservation();
@@ -45,12 +45,16 @@ void Restaurant::Alarm(vector<int>* id, const int waiters_free, const bool manag
     cash_->Cleaning(id);
 }
 
-void Restaurant::WakeUp(const double clock)
+void Restaurant::WakeUp(const double clock, const int waiters_free)
 {
     for (int i = 0; i < 14; ++i)
     {
         cash_->WakeUpIfPossible(clock);
         buffet_->WakeUpIfPossible(clock);
+    }
+    for (int i = 0; i < waiters_free; ++i)
+    {
+        tables_->WakeUpPendingProcessQueue(clock);
     }
     tables_->WakeUpQueueForTables(manager_->Free(), clock);
 }

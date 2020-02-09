@@ -14,7 +14,7 @@ public:
 	int id_;
 	int phase_;
 	bool terminated_;
-	const int group_size_ = (rand() % 4) + 1;
+	int group_size_;// = (rand() % 4) + 1;
 	Event_list* event_list_;
 	void TimeUpdate(double);
 private:

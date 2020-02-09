@@ -10,11 +10,11 @@ public:
 	bool Free();
 	bool AreSame(double, double) const;
 	void CashInfo();
-	void AddCustomerToCash();
-	void AddCustomerToQueue(Process*);
+	void AddCustomerToCash(double);
+	void AddCustomerToQueue(Process*, double);
 	void RemoveCustomer(Process*);
 	void WakeUpIfPossible(double);
-	void Alarm();
+	void Alarm(double);
 	void Cleaning(vector<int>*);
 private:
 	int size();

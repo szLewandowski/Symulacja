@@ -1,5 +1,6 @@
 #include "Tables.h"
 #include <iostream>
+#include "fstream"
 
 Tables::Tables()
 {
@@ -26,7 +27,7 @@ Tables::~Tables()
 void Tables::TableInfo()
 {
 	cout << "\n\nTable info:\n";
-	cout << "Kolejka do stolikow: " << queue_.size() << endl;
+	cout << "Kolejka do stolikow: " << queue_.size() <<" klientow w kolejce: "<<queue_clients_<< endl;
 	cout << "Procesy oczekujace na kelnera: " << pending_processes_.size() << endl;
 	int free_2 = 0;
 	int free_3 = 0;
@@ -52,14 +53,23 @@ void Tables::TableInfo()
 	cout << "Czteroosobowe: " << quadruple_seats_ - free_4 << "/" << quadruple_seats_ << endl;	
 }
 
-void Tables::AddToQueue(Process* customer)
+void Tables::AddToQueue(Process* customer, const double time)
 {
 	queue_.push(customer);
+	queue_clients_ += customer->group_size_;
+	ofstream b_output("punkt_b.txt", ios::app);
+	b_output << time << " " << queue_.size() << endl;
+	b_output.close();
 }
 
-void Tables::TakeToManager()
+void Tables::TakeToManager(const double time)
 {
+	queue_clients_ -= queue_.front()->group_size_;
 	queue_.pop();
+	ofstream b_output("punkt_b.txt", ios::app);
+	b_output << time << " " << queue_.size() << endl;
+	b_output.close();
+	
 }
 
 void Tables::AddToTables(Process* customer)
@@ -363,7 +373,7 @@ void Tables::RemovePendingProcess()
 	pending_processes_.pop();
 }
 
-void Tables::Alarm()
+void Tables::Alarm(const double time)
 {
 	if (queue_.empty() == false)
 	{
@@ -373,7 +383,11 @@ void Tables::Alarm()
 			queue_.pop();
 			if (rand() % 10 < 3)
 			{
+				queue_clients_ -= temp->group_size_;
 				delete temp;
+				ofstream b_output("punkt_b.txt", ios::app);
+				b_output << time << " " << queue_.size() << endl;
+				b_output.close();
 			}
 			else
 			{

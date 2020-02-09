@@ -7,8 +7,8 @@ public:
 	Tables();
 	~Tables();
 	void TableInfo();
-	void AddToQueue(Process*);
-	void TakeToManager();
+	void AddToQueue(Process*, double);
+	void TakeToManager(double);
 	void AddToTables(Process*);
 	void RemoveFromTables(Process*);
 	bool EnoughFreeSeats();
@@ -17,7 +17,7 @@ public:
 	void WakeUpPendingProcessQueue(double);
 	void WaitersService();
 	void RemovePendingProcess();
-	void Alarm();
+	void Alarm(double);
 	void Cleaning(vector<int>*);
 private:
 	queue<Process*> queue_;
@@ -28,5 +28,6 @@ private:
 	double double_tables_[double_seats_][2]{};
 	double triple_tables_[triple_seats_][3]{};
 	double quadruple_tables_[quadruple_seats_][4]{};
+	int queue_clients_ = 0;
 };
 
