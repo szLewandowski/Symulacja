@@ -8,3 +8,5 @@ This application simulates user traffic in a Chinese restaurant and serves as a 
  - Random, dynamic system model
  - Process interaction method
  - Doubly linked event list
+
+[Project Report (PL)](Raport%20ko%C5%84cowy.pdf)
